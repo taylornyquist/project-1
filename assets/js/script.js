@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+var savedLocationsArray = JSON.parse(localStorage.getItem("searched-cities"));
+
+>>>>>>> searchhistory
 // seems like this one will accept uppercase or lowercase, still should use .val() and .trim()
 var stateCode = "tn";
 
@@ -322,6 +327,24 @@ var saveLocation = function (city) {
     // console.log(savedLocationsArray);
     showPrevious();
 
+};
+
+
+// function showPrevious shows the previously searched locations pulled from local storage
+var showPrevious = function () {
+
+    if (savedLocationsArray) {
+
+        $("#prev-searches").empty();
+        var btns = $("<div>").attr("class", "list-group");
+        for (var i = 0; i < savedLocationsArray.length; i++) {
+            var locationBtn = $("<button>").attr("class", "loc-btn list-group-item list-group-item-action list-group-item-primary").text(savedLocationsArray[i]);
+            btns.prepend(locationBtn);
+        }
+
+        $("#prev-searches").append(btns);
+
+    }
 };
 
 var click = function () {
