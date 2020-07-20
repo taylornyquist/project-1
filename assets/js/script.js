@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 var savedLocationsArray = JSON.parse(localStorage.getItem("searched-cities"));
+=======
+//variables for local storage searches
+var savedLocationsArray = JSON.parse(localStorage.getItem("searched-cities"));
+
+// seems like this one will accept uppercase or lowercase, still should use .val() and .trim()
+var stateCode = "tn";
+>>>>>>> fixingbugs
 
 // function to clear out previous NPS and weather divs
 function clear() {
@@ -371,26 +379,23 @@ function getWeatherForecast() {
 };
 
 // local storage function
-var saveLocation = function (city) {
-    // console.log(cityLocation);
+var saveLocation = function (getNPSData) {
+    console.log(getNPSData);
 
     // add location to the saved locations array
     if (savedLocationsArray === null) {
-        savedLocationsArray = [city];
-    } else if (savedLocationsArray.indexOf(city) === -1) {
-        savedLocationsArray.push(city);
+        savedLocationsArray = [getNPSData];
+    } else if (savedLocationsArray.indexOf(getNPSData) === -1) {
+        savedLocationsArray.push(getNPSData);
     }
 
     // save the new array to localStorage
-    localStorage.setItem("city-input", JSON.stringify(savedLocationsArray));
-    localStorage.setItem("state-input", JSON.stringify(savedLocationsArray));
-    // console.log(savedLocationsArray);
+    localStorage.setItem("searched-cities", JSON.stringify(savedLocationsArray));
     showPrevious();
 
 };
 
-
-// function showPrevious shows the previously searched locations pulled from local storage
+// showPrevious function to show previously searched items
 var showPrevious = function () {
 
     if (savedLocationsArray) {
@@ -415,6 +420,7 @@ var click = function () {
     getCurrent();
     getWeatherForecast();
     clear();
+
 }
 
 // on click for search button icon
@@ -435,10 +441,3 @@ $("#state-input").on("keyup", function (event) {
         document.getElementById("search-btn").click();
     }
 });
-
-
-
-// var getLocalStorage = function() {
-//     console.log(localStorage.getItem("#city-input"))
-//     console.log(localStorage.getItem("#state-input"))
-// };
