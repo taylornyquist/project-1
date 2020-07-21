@@ -107,6 +107,15 @@ ul {
     text-overflow: ellipsis;
     /* text-align: left; */
 } 
+
+.button-primary {
+    width: 100%;
+    padding: 0 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    /* text-align: left; */
+} 
 =======
 .img {
     float: right;

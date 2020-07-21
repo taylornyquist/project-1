@@ -17,9 +17,22 @@ var showData = function () {
         $(".weather-forecast").addClass("show");
 };
 
-//variables for local storage searches
+var loadHistory = function () {
 
-var savedLocationsArray = JSON.parse(localStorage.getItem("searched-cities"));
+    if (!savedLocationsArray) {
+        savedLocationsArray = [];
+    };
+
+    // console.log(savedLocationsArray);
+    showPrevious(savedLocationsArray);
+};
+
+var showData = function () {
+
+        // show data-section and weather-forecast (hidden on page load)
+        $(".data-section").addClass("show");
+        $(".weather-forecast").addClass("show");
+};
 
 // function to clear out previous NPS and weather divs
 function clear() {
@@ -40,17 +53,8 @@ var stateCode = "tn";
 
 function getNPSData(state) {
 
-// function to clear out previous NPS and weather divs
-function clear() {
-    // clear all of the previous Ticketmaster data
-    $("#ticketmaster").empty();
-    // clear all of the previous NPS data
-    $("#nationalParks").empty();
-    // clear all of the previous weather data
-    $("#forecast").empty();
-};
 
-function getNPSData() {
+function getNPSData(state) {
 
     // var state = $("#state-input").val().trim().toLowerCase();
 
@@ -70,7 +74,7 @@ function getNPSData() {
             var nationalParksListed = NPSResponse.data;
 
 
-            console.log(NPSResponse);
+            // console.log(NPSResponse);
 
             //loop through all park responses
             for (i = 0; i < NPSResponse.data.length; i++) {
@@ -459,9 +463,10 @@ var saveLocation = function (getNPSData) {
         savedLocationsArray.push(getNPSData);
     }
 
-    // save the new array to localStorage
-    localStorage.setItem("searched-cities", JSON.stringify(savedLocationsArray));
-    showPrevious();
+var saveLocation = function (city, state) {
+
+    // var city = $("#city-input").val().trim().toLowerCase();
+    // var state = $("#state-input").val().trim().toUpperCase();
 
     // start remove dupicates script
     jsonObject = savedLocationsArray.map(JSON.stringify);
@@ -481,13 +486,38 @@ var saveLocation = function (getNPSData) {
     showPrevious(savedLocationsArray);
 };
 
+    // console.log(city);
+    // console.log(state);
+
+    var newSearch =
+        { "city": city, "state": state };
+
+    // add the newSearch object to the savedLocationsArray
+    savedLocationsArray.push(newSearch);
+    // console.log(savedLocationsArray);
+
+    // start remove dupicates script
+    jsonObject = savedLocationsArray.map(JSON.stringify);
+    // console.log(jsonObject);
+
+    uniqueSet = new Set(jsonObject);
+    savedLocationsArray = Array.from(uniqueSet).map(JSON.parse);
 
 // function showPrevious shows the previously searched locations pulled from local storage
 var showPrevious = function (savedLocationsArray) {
 
 // showPrevious function to show previously searched items
+    // console.log(savedLocationsArray);
 
-var showPrevious = function () {
+    // save the new array to localStorage
+    localStorage.setItem("searched-location", JSON.stringify(savedLocationsArray));
+
+    // call the showPrevious function to populate search history side bar
+    showPrevious(savedLocationsArray);
+};
+
+// function showPrevious shows the previously searched locations pulled from local storage
+var showPrevious = function (savedLocationsArray) {
 
 
     if (savedLocationsArray) {
@@ -518,11 +548,13 @@ var click = function () {
 
     console.log("test");
 
-    getNPSData();
-    getTickemaster();
-    getCovidData();
-    getCurrent();
-    getWeatherForecast();
+    saveLocation(city, state);
+    getNPSData(state);
+    getTickemaster(city);
+    getCovidData(state);
+    getCurrent(city);
+    getWeatherForecast(city);
+    showData();
     clear();
 };
 
@@ -547,7 +579,6 @@ $("#search-btn").on("click", click);
 
 
 $("#city-input").on("keyup", function (event) {
-
     if (event.keyCode === 13) {
         event.preventDefault();
         document.getElementById("search-btn").click();
@@ -559,13 +590,11 @@ $("#state-input").on("keyup", function (event) {
         event.preventDefault();
         document.getElementById("search-btn").click();
     }
-
 });
 
 // on click for previously saved locations
 $(document).on("click", ".loc-btn", function () {
     var searchedLocation = $(this)[0].innerText;
-
 
     // splice searchedLocation at the comma
     var splitWords = searchedLocation.split(",");
@@ -579,4 +608,3 @@ $(document).on("click", ".loc-btn", function () {
 
 loadHistory();
 
-});
